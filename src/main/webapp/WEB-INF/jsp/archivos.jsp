@@ -15,5 +15,7 @@
         <h1>Hello World!</h1>
         Archivos para el grupo ${id_grupo}
         <a href="chat?id_grupo=${id_grupo}&id_Usuario=${id_usuario}">Lista de archivos</a>
+        <a href="getMessages?id_grupo=${id_grupo}">Mensajes</a>
+        
     </body>
 </html>
