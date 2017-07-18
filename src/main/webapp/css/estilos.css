@@ -106,14 +106,16 @@ img.bordered-actions{
 
 }
 img.bordered-actions ,input{
- vertical-align: middle;
-     text-align: center;
-         display: inline-block;
-    display:block;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-    margin-left: auto;
+	vertical-align: middle;
+	text-align: center;
+	display: inline-block;
+	display:block;
+	margin-left: auto;
 	margin-right: auto;
-    
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+}
+.actions-text-imput{
+	color:#3F3F3F;
 }
