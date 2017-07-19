@@ -75,7 +75,7 @@
                     <section class="actions">
               <div class="col-xs-8 col-sm-10 col-md-10 col-lg-10">
                 <div class="actions-text">
-                  <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10">
+                  <div class="col-xs-9 col-sm-10 col-md-10 col-lg-10 actions-text-imput">
                     <input id="mensaje" type="text" name="" value="" placeholder="">
                   </div>
                   <div id="enviar_mensaje" class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
