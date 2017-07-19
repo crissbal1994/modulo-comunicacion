@@ -35,14 +35,13 @@ public class ArchivoRestController {
     private static final Logger logger = Logger.getLogger(RestController.class.getName());
     //Solicitud del usuario y método
     @RequestMapping(value = "/addMessage", method = RequestMethod.POST)
-    public Mensaje agregar(@RequestBody Mensaje m ) {
+    public Mensaje agregar(@RequestBody Mensaje m) {
+    	System.out.println(m.getMensaje());
     	date = new Date();
     	try {
     		m.setEnviado(date);		   		
-    		msgRep.save(m);
-    		 	  		
-    		} catch (Exception e) {
-			// TODO Auto-generated catch block
+    		msgRep.save(m);    		 	  		
+		} catch (Exception e){
 			e.printStackTrace();
 		}
         return m;
@@ -66,13 +65,8 @@ public class ArchivoRestController {
     	date = new Date();
     	Resultado r = new Resultado();
     	try {
-    			
-    			m.setEnviado(date);
-    			
-    			
-    			
+    			m.setEnviado(date);  			
     			msgRep.save(m);
-    			
     			r.setEstado(true);
     		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -80,6 +74,11 @@ public class ArchivoRestController {
 			e.printStackTrace();
 		}
         return r;
+    }
+    
+    @RequestMapping(value = "/error", method = RequestMethod.POST)
+    public String error() {
+        return "Problemas en la página";
     }
     
     
