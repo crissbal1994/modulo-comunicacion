@@ -16,6 +16,7 @@ public class Mensaje {
 	private long emisor;
 	private Date enviado;
 	private String mensaje;
+	private String modulo;
 	
 	
 	public long getIdMensaje() {
