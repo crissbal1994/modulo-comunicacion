@@ -9,6 +9,7 @@ import com.legado.comunicacion.Rep.MensajeRep;
 import java.util.List;
 import com.legado.comunicacion.dom.Mensaje;
 import com.legado.comunicacion.dom.Resultado;
+import com.legado.comunicacion.dom.Usuario;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,6 +60,29 @@ public class ArchivoRestController {
 		}
         return mensajes;
     }
+    
+    //==========================SERVICIO DE PRUEBA 9092=========================
+    @RequestMapping(value = "/get_miembros", method = RequestMethod.GET)
+    public List<Usuario> usuariosGrupo(@RequestParam Long id_grupo ) {
+    	Usuario u = new Usuario();
+    	Usuario u1 = new Usuario();
+    	u.setIdUsuario(1);
+    	u.setAlias("Josue");
+    	u.setCorreo("josue@hotmail.com");
+    	u.setNombre("Josue Perez");
+    	
+    	u1.setIdUsuario(2);
+    	u1.setAlias("Pedro2");
+    	u1.setCorreo("josue2@hotmail.com");
+    	u1.setNombre("Pedro Paez ");
+    	
+    	List<Usuario> usuarios = new ArrayList<>();
+    	usuarios.add(u);
+    	usuarios.add(u1);
+    	
+        return usuarios;
+    }
+    //===================================================================
     
     @RequestMapping(value = "/crear_alerta", method = RequestMethod.POST)
     public Resultado alerta(@RequestBody Mensaje m   ) {

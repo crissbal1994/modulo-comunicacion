@@ -11,60 +11,34 @@ public class Usuario {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int idUsuario;
-	private String nombreCompleto;
-	private String UK_correo;
-	private String genero;
-	private String UK_alias;
-	private String contrasenia;
-	private String contraseniaSalt;
-	private int idCarrera;
+	private String alias;
+	private String correo;
+	private String nombre;
 	public int getIdUsuario() {
 		return idUsuario;
 	}
 	public void setIdUsuario(int idUsuario) {
 		this.idUsuario = idUsuario;
 	}
-	public String getNombreCompleto() {
-		return nombreCompleto;
+	public String getAlias() {
+		return alias;
 	}
-	public void setNombreCompleto(String nombreCompleto) {
-		this.nombreCompleto = nombreCompleto;
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
-	public String getUK_correo() {
-		return UK_correo;
+	public String getCorreo() {
+		return correo;
 	}
-	public void setUK_correo(String uK_correo) {
-		UK_correo = uK_correo;
+	public void setCorreo(String correo) {
+		this.correo = correo;
 	}
-	public String getGenero() {
-		return genero;
+	public String getNombre() {
+		return nombre;
 	}
-	public void setGenero(String genero) {
-		this.genero = genero;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
-	public String getUK_alias() {
-		return UK_alias;
-	}
-	public void setUK_alias(String uK_alias) {
-		UK_alias = uK_alias;
-	}
-	public String getContrasenia() {
-		return contrasenia;
-	}
-	public void setContrasenia(String contrasenia) {
-		this.contrasenia = contrasenia;
-	}
-	public String getContraseniaSalt() {
-		return contraseniaSalt;
-	}
-	public void setContraseniaSalt(String contraseniaSalt) {
-		this.contraseniaSalt = contraseniaSalt;
-	}
-	public int getIdCarrera() {
-		return idCarrera;
-	}
-	public void setIdCarrera(int idCarrera) {
-		this.idCarrera = idCarrera;
-	}
+	
+	
 	
 }
