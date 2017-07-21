@@ -14,6 +14,13 @@
 
 <script type="text/javascript">
 
+$(document).ready(function() {
+    $('#miboton').click(function() {
+        // Recargo la página
+        location.reload();
+    });
+});
+
 window.onload = function() {
 	  cargarMensajes();
 	};
@@ -40,8 +47,8 @@ window.onload = function() {
     	      ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
     	      ("0" + date.getDate()).slice(-2) + " " + date.getHours() + ":" + 
     	      date.getMinutes(); 
-			var li=document.createElement('li');
-            li.id=data[i].idMensaje;
+			var div=document.createElement('div');
+			div.id=data[i].idMensaje;
             
           //OBTENER NOMBRES DE SERVICIO
             for ( var j = 0; j < datos.length; j++) {
@@ -51,8 +58,18 @@ window.onload = function() {
             }
             //=======================================
             
-            li.innerHTML="<li> <h2><sub>"+formatted+"</sub> "+data[i].mensaje+"<--<b>"+data[i].emisor+"</b></h2> </li>";
-            document.getElementById("mensajes").appendChild(li);
+            div.innerHTML="<div class=\"mensaje-autor  text-right\">"+
+			"<div class=\"mensaje\">"+
+			"<div class=\"nombre-autor\">"+data[i].emisor+"</div>"+
+				"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
+				"<div class=\"flecha-derecha\"></div>"+
+			"</div>"+
+			"<div class=\"fecha\">"+formatted+"</div>"+
+			"</div>";
+            
+            
+            
+            document.getElementById("mensajes").appendChild(div);
             document.getElementById(data[i].idMensaje).value="";
 		}
     	
@@ -80,6 +97,7 @@ window.onload = function() {
         	    post('/addMessage',message);
         	    
         	}
+        	
         </script>
 <meta name="viewport"
 	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -121,26 +139,14 @@ window.onload = function() {
 					</form>
 
 					<!--se dibuja la lista de integrantes-->
-					<div class="scroll scrollable scroll-bar vertical">
-						<ul class="list-unstyled">
-							<li>
-								<h3>Paola Cardenas</h3>
-							</li>
-							<li>
-								<h3>Cristina Balcazar</h3>
-							</li>
-							<li>
-								<h3>Franklin Bernal</h3>
-							</li>
-							<li>
-								<h3>Jose Moyano</h3>
-							</li>
-							<li>
-								<h3>Boris Cabrera</h3>
-							</li>
-							<li>
-								<h3>Gabriel Loja</h3>
-							</li>
+					<div class="scroll scrollable scroll-bar vertical" >
+						<ul id="listaIntegrantes" class="list-unstyled">
+							<li> <h4> Paola Cardenas </h4> </li>
+							<li> <h4> Cristina Balcazar </h4> </li>
+							<li> <h4> Franklin Bernal </h4> </li>
+							<li> <h4> Jose Moyano </h4> </li>
+							<li> <h4> Boris Cabrera </h4> </li>
+							<li> <h4> Gabriel Loja </h4> </li>
 						</ul>
 					</div>
 				</aside>
@@ -150,11 +156,32 @@ window.onload = function() {
 				<div class="row">
 					<section class="chat">
 						<div class="scroll scrollable scroll-bar vertical">
-							<ul class="list-unstyled text-right " id="mensajes">
-								<li>
-									
-								</li>
-							</ul>
+								<div id="chat">
+									<div id="mensajes">
+										<div class="mensaje-autor  text-right">
+											<div class="mensaje">
+												<div class="nombre-autor">Juan Andres</div>
+												<div class="contenido">
+													Hola amigos soy el mensaje de un autor
+												</div>
+												<div class="flecha-derecha"></div>
+											</div>
+											<div class="fecha">23:32:12 54:54:23</div>
+										</div>
+
+										<div class="mensaje-amigo text-left">
+											<div class="mensaje">
+												<div class="nombre-amigo">Juan Andres</div>
+												<div class="flecha-izquierda"></div>
+												<div class="contenido">
+													Hola chicos soy un mensaje de ejemplo de un amigo del grupo saludos
+												</div>
+											</div>
+											<div class="fecha">23:32:12 54:54:23</div>
+										</div>
+									</div>
+									<span id="final"></span><!--Especificamos el final para presentar los mensajes mas ultimos-->
+								</div>
 						</div>
 					</section>
 				</div>
@@ -168,7 +195,7 @@ window.onload = function() {
 										<input id="messageInput" type="text" name="" value="">
 									</div>
 									<div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-										<button onclick="enviarMensaje();" type="button"
+										<button id="miboton" onclick="enviarMensaje();" type="button"
 											class="btn btn-default bordered">
 											<img src="img/icono_enviar.png" alt="boton-enviar"
 												class="bordered-actions">

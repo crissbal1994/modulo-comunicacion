@@ -47,9 +47,7 @@ hr {
 	-moz-border-radius: 10px 10px 10px 10px;
 	-webkit-border-radius: 10px 10px 10px 10px;
 	margin: 2px 2px 2px 2px;
-	-webkit-box-shadow: 10px 10px 7px -6px rgba(0,0,0,0.75);
-	-moz-box-shadow: 10px 10px 7px -6px rgba(0,0,0,0.75);
-	box-shadow: 10px 10px 7px -6px rgba(0,0,0,0.75);
+
 }
 
 aside div.scroll {
@@ -74,48 +72,177 @@ input {
  Esta seccion especifica el estilo del chat
  ******************************************************************
  *******/
-.chat{
-	width: 100%;
-	height: 510px; 
-	background : white;
-}
+ .chat{
+ 	width: 100%;
+ 	height: 510px; 
+ 	background : white;
+ }
  .actions{
  	width: 100%;
  	height: 95px;
  	background : white; 
-  border:solid;
-  color: #c6c6c6;
+ 	border:solid;
+ 	color: #c6c6c6;
  }
 
-  .actions-text{
+ .actions-text{
  	width: 100%;
-	height: 70px;
+ 	height: 70px;
  	background : white; 
-  	border:solid;
-  	margin: 10px 2px 2px 2px ;
-  	 border-radius: 5px 5px 5px 5px;
-	-moz-border-radius: 5px 5px 5px 5px;
-	-webkit-border-radius: 5px 5px 5px 5px;
+ 	border:solid;
+ 	margin: 10px 2px 2px 2px ;
+ 	border-radius: 10px 10px 10px 10px;
+ 	-moz-border-radius: 10px 10px 10px 10px;
+ 	-webkit-border-radius: 10px 10px 10px 10px;
  }
 
-img.bordered-actions{
-	position:relative; width:100%;
-		display: flex;
-	align-items: center;
-	height: 40px;
+ img.bordered-actions{
+ 	position:relative; width:100%;
+ 	display: flex;
+ 	align-items: center;
+ 	height: 40px;
 
-}
-img.bordered-actions ,input{
-	vertical-align: middle;
-	text-align: center;
-	display: inline-block;
-	display:block;
-	margin-left: auto;
-	margin-right: auto;
-	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-}
-.actions-text-imput{
-	color:#3F3F3F;
-}
+ }
+ img.bordered-actions ,input{
+ 	vertical-align: middle;
+ 	text-align: center;
+ 	display: inline-block;
+ 	display:block;
+ 	margin-left: auto;
+ 	margin-right: auto;
+ 	position: relative;
+ 	margin-left: auto;
+ 	margin-right: auto;
+
+ }
+ .actions-text-imput{
+ 	color:#3F3F3F;
+ }
+
+ /**********************************************************************************************************************/
+
+ #chat{
+ 	background-color: #FFFFFF;
+ 	margin: 20px auto 0;
+ }
+
+ /**********************************************************************************************************************/
+
+ #chat #mensajes{
+ 	padding: 10px;
+ 	height: auto;
+ 	width: auto;
+ }
+
+ /**********************************************************************************************************************/
+
+ #chat #mensajes .mensaje-autor{
+ 	margin-bottom: 25px;
+ 	width: 100%;
+ }
+ #chat #mensajes .mensaje-autor .contenido{
+ 	background-color: white;
+ 	border-radius: 15px;
+ 	box-shadow: 2px 2px 5px #B2B2B2;
+ 	display: inline-block;
+ 	font-size: 13px;
+ 	padding: 10px;
+ 	vertical-align: top;
+ 	max-width: 75%;
+ 	
+ }
+ #chat #mensajes .mensaje-autor .fecha{
+ 	color: #777;
+ 	font-style: italic;
+ 	font-size: 13px;
+ 	text-align: right;
+ 	margin-right: 35px;
+ 	margin-top: 10px;
+ }
+ #chat #mensajes .mensaje-autor .flecha-derecha{
+ 	display: inline-block;
+ 	margin-left: -6px;
+ 	margin-top: 10px;
+ 	width: 0; 
+ 	height: 0; 
+ 	border-top: 0px solid transparent;
+ 	border-bottom: 15px solid transparent;
+ 	border-left: 15px solid white;
+
+ }
+ #chat #mensajes .mensaje-autor .nombre-autor{
+ 	float: right;
+ 	background-color: white;
+ 	border-radius: 15px;
+ 	box-shadow: 2px 2px 5px #B2B2B2;
+ 	display: inline-block;
+ 	font-size: 13px;
+ 	padding: 5px;
+ 	vertical-align: top;
+ 	display: inline-block;
+ }
+
+ /**********************************************************************************************************************/
+
+ #chat #mensajes .mensaje-amigo{
+ 	margin-bottom: 25px;
+ 	width: 100%;
+ 	float: left;
+ }
+
+
+ #chat #mensajes .mensaje-amigo .contenido{
+ 	float: left;
+ 	background-color: #32bebe;
+ 	border-radius: 15px;
+ 	color: white;
+ 	display: inline-block;
+ 	font-size: 13px;
+ 	padding: 10px;	
+ 	vertical-align: top;
+ 	max-width: 75%;
+ 	text-align: right;
+ 	margin-left: 5px;
+ 	box-shadow: 2px 2px 5px #B2B2B2;
+
+ }
+ #chat #mensajes .mensaje-amigo .flecha-izquierda{
+ 	float: left;
+ 	display: inline-block;
+ 	margin-right: -6px;
+ 	margin-top: 10px;
+ 	margin-left: 0px;
+ 	height: 0; 
+ 	border-top: 0px solid transparent;
+ 	border-bottom: 15px solid transparent;
+ 	border-right: 15px solid #32bebe;
+ }
+
+ #chat #mensajes .mensaje-amigo .fecha{
+ 	color: #777;
+ 	font-style: italic;
+ 	font-size: 13px;
+ 	text-align: left;
+ 	margin-bottom: : 10px;
+ }
+
+ #chat #mensajes .mensaje-amigo .nombre-amigo{
+ 	float: left;
+ 	color: white;
+ 	background-color: #33bebe;
+ 	border-radius: 15px;
+ 	box-shadow: 2px 2px 5px #B2B2B2;
+ 	display: inline-block;
+ 	font-size: 13px;
+ 	padding: 5px;
+ 	vertical-align: top;
+ 	display: inline-block;
+ }
+
+
+ /*************************/
+
+ .mensaje{
+ 	width: 100%;
+ 	float: left;
+ }
