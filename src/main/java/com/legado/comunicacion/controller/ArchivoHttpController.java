@@ -28,4 +28,13 @@ public class ArchivoHttpController {
         mv.setViewName("index");
 	return mv;
     }
+    
+    @RequestMapping("/ultimoMSJ")
+    //RequestParam permite obtener un atributo de la url, debe tener el mismo nombre
+    public @ResponseBody ModelAndView hello(@RequestParam String id){
+    	ModelAndView mv = new ModelAndView();
+        //Esto carga el jsp correspondiente como la vista ante la solicitud del usuario
+        mv.setViewName("ultimoMSJ");
+	return mv;
+    }
 }
