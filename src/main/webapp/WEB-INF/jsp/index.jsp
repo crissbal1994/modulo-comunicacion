@@ -20,23 +20,23 @@ $(document).ready(function() {
     });
 });
 window.onload = function() {
-	  cargarMensajes();
+	cargarMensajes();
+	cargarUsuarios();
+	posicionarScroll();
 	};
 	
 	var datos=null;
 	function cargarMensajes(){
 		//obtener de puerto 9092
 		$.get("/get_miembros?",{id_grupo: idGroup},obtenerNombres)
-		
-	}
-		
-	function obtenerNombres(data){
-		datos=data;
-		$.get("/getMessages?",{id_grupo: idGroup},callback)
+		function obtenerNombres(data){
+			datos=data;
+			$.get("/getMessages?",{id_grupo: idGroup},callback)
+		}	
 	}
 	
-	
-	
+
+
 	function callback(data){
     	for ( var i = 0; i < data.length; i++) {
     		var date = new Date();
@@ -51,51 +51,109 @@ window.onload = function() {
           //OBTENER NOMBRES DE SERVICIO
             for ( var j = 0; j < datos.length; j++) {
             	if (datos[j].idUsuario==data[i].emisor){
-            		data[i].emisor=datos[j].alias
+
+            		if(${id_usuario}===data[i].emisor){
+                		data[i].emisor=datos[j].alias;
+        				div.innerHTML="<div class=\"mensaje-autor  text-right\">"+
+        				"<div class=\"mensaje\">"+
+        				"<div class=\"nombre-autor\">"+data[i].emisor+"</div>"+
+        					"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
+        					"<div class=\"flecha-derecha\"></div>"+
+        				"</div>"+
+        				"<div class=\"fecha\">"+formatted+"</div>"+
+        				"</div>";
+        			}else{
+                		data[i].emisor=datos[j].alias;
+        				div.innerHTML="<div class=\"mensaje-amigo  text-left\">"+
+        				"<div class=\"mensaje\">"+
+        				"<div class=\"nombre-amigo\">"+data[i].emisor+"</div>"+
+        				"<div class=\"flecha-izquierda\"></div>"+
+        				"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
+        				"</div>"+
+        				"<div class=\"fecha\">"+formatted+"</div>"+
+        				"</div>";
+        			}
+
+                    document.getElementById("mensajes").appendChild(div);
+                    document.getElementById(data[i].idMensaje).value="";
             	}
             }
             //=======================================
-            
-            div.innerHTML="<div class=\"mensaje-autor  text-right\">"+
-			"<div class=\"mensaje\">"+
-			"<div class=\"nombre-autor\">"+data[i].emisor+"</div>"+
-				"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
-				"<div class=\"flecha-derecha\"></div>"+
-			"</div>"+
-			"<div class=\"fecha\">"+formatted+"</div>"+
-			"</div>";
-            
-            
-            
-            document.getElementById("mensajes").appendChild(div);
-            document.getElementById(data[i].idMensaje).value="";
 		}
-    	
-    	
     }
-	
-	
-        	var idGroup=${id_grupo};
-        	var idUser=${id_usuario};
-        	function post(url,data){
-        		return $.ajax({
-        			type:'POST',
-        			url:url,
-        			headers:{
-        				'Accept': 'application/json',
-        				'Content-Type': 'application/json'
-        			},
-        			data:JSON.stringify(data)
-        		});
-        	}
-        	function enviarMensaje() {
-        	    var $messageInput = $('#messageInput');
-        	    var message = {mensaje: $messageInput.val(), idGrupo: idGroup, emisor: idUser};
-        	    $messageInput.val('');
-        	    post('/addMessage',message);
-        	    
-        	}
-        	
+
+       	var idGroup=${id_grupo};
+       	var idUser=${id_usuario};
+       	function post(url,data){
+       		return $.ajax({
+       			type:'POST',
+       			url:url,
+       			headers:{
+       				'Accept': 'application/json',
+       				'Content-Type': 'application/json'
+       			},
+       			data:JSON.stringify(data)
+       		});
+       	}
+       	
+       	function enviarMensaje() {
+       	    var $messageInput = $('#messageInput');
+       	    var message = {mensaje: $messageInput.val(), idGrupo: idGroup, emisor: idUser};
+       	    $messageInput.val('');
+       	    post('/addMessage',message);
+       	}
+        
+       	function cargarEnIntegrantes(evt){
+   	     var email=document.getElementById("email").value;
+   		$.get("/search_correo?",{correo: email}, correo );
+   	} 
+   	
+   	var usuario;
+   	var alias;
+   	function correo(data){
+   		if(data)
+   	    {
+   			usuario=data.nombre;
+   	    	alias=data.alias;
+   			$.get("/add_miembro?",{id_usuario: data.idUsuario,id_grupo:idGroup}, agregarMiembro );
+   	    }else{
+   	    	alert("No existe el usuario");
+   	    }
+	//	cargarUsuarios(); //activar cuando los micro servicios esten listos   	
+   	   	function agregarMiembro(estado){
+			if(estado==="ok"){
+				var li=document.createElement('li'); //quitar cuando ya esten los servicios
+   	            li.id=alias; //quitar cuando ya esten los servicios
+   	            li.innerHTML="<li> <h4> "+usuario+"</h4> </li>"; //quitar cuando ya esten los servicios
+   	            document.getElementById("listaIntegrantes").appendChild(li); //quitar cuando ya esten los servicios
+   	            document.getElementById("email").value=""; //quitar cuando ya esten los servicios
+				alert("Usuario ingresado");
+			}else if(estado==="existe"){
+				alert("El usuario ya existe en el grupo");
+			}else{
+				alert("Error al realizar la acción revice los servicios");
+			}
+		}
+   	}
+   	
+   	function cargarUsuarios(){
+   		$.get("/get_miembros?",{id_grupo: idGroup},cargarIntegrantes);
+       	function cargarIntegrantes(data){
+	            document.getElementById("listaIntegrantes").innerHTML="";
+           	for ( var i = 0; i < data.length; i++) {
+   				var li=document.createElement('li');
+   	            li.id=data[i].alias;
+   	            li.innerHTML="<li> <h4> "+data[i].nombre+"</h4> </li>";
+   	            document.getElementById("listaIntegrantes").appendChild(li);
+   	            document.getElementById("email").value="";
+           	}
+       	}	
+   	}
+   	function posicionarScroll(){
+   		var objDiv = document.getElementById("chat");
+   		objDiv.scrollTop = objDiv.scrollHeight;
+    }
+       	
         </script>
 <meta name="viewport"
 	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -127,24 +185,18 @@ window.onload = function() {
 					<h1>Proyecto XYZ</h1>
 					<hr>
 					<h4 class="bold">Agregar Integrante</h4>
-					<form class="navbar-form" role="search">
-						<div class="form-group">
-							<input type="text" class="form-control bordered"
-								placeholder="Correo">
-						</div>
-						<br>
-						<button type="submit" class="btn btn-default bordered">Agregar</button>
-					</form>
+					<form class = "navbar-form" role = "search">
+			          <div class = "form-group">
+			            <input id="email" name="email" type = "email" class = "form-control bordered" placeholder = "Correo electrónico" required>    <span id="emailOK"></span>
+			          </div>
+			          <br>
+			          <button id="agregarIntegrante" type="button" class = "btn btn-default bordered" onclick="cargarEnIntegrantes()">Agregar</button>
+			        </form>
 
 					<!--se dibuja la lista de integrantes-->
 					<div class="scroll scrollable scroll-bar vertical" >
 						<ul id="listaIntegrantes" class="list-unstyled">
-							<li> <h4> Paola Cardenas </h4> </li>
-							<li> <h4> Cristina Balcazar </h4> </li>
-							<li> <h4> Franklin Bernal </h4> </li>
-							<li> <h4> Jose Moyano </h4> </li>
-							<li> <h4> Boris Cabrera </h4> </li>
-							<li> <h4> Gabriel Loja </h4> </li>
+							<!-- <li> <h4> Paola Cardenas </h4> </li> Aqui va los Integrantes del grupo -->
 						</ul>
 					</div>
 				</aside>
@@ -154,32 +206,20 @@ window.onload = function() {
 				<div class="row">
 					<section class="chat">
 						<div class="scroll scrollable scroll-bar vertical">
-								<div id="chat">
-									<div id="mensajes">
-										<div class="mensaje-autor  text-right">
-											<div class="mensaje">
-												<div class="nombre-autor">Juan Andres</div>
-												<div class="contenido">
-													Hola amigos soy el mensaje de un autor
-												</div>
-												<div class="flecha-derecha"></div>
+							<div id="chat">
+								<div id="mensajes">
+									<div class="mensaje-amigo text-left">
+										<div class="mensaje">
+											<div class="nombre-amigo">Juan Andres</div>
+											<div class="flecha-izquierda"></div>
+											<div class="contenido">
+												Hola chicos soy un mensaje
 											</div>
-											<div class="fecha">23:32:12 54:54:23</div>
 										</div>
-
-										<div class="mensaje-amigo text-left">
-											<div class="mensaje">
-												<div class="nombre-amigo">Juan Andres</div>
-												<div class="flecha-izquierda"></div>
-												<div class="contenido">
-													Hola chicos soy un mensaje de ejemplo de un amigo del grupo saludos
-												</div>
-											</div>
-											<div class="fecha">23:32:12 54:54:23</div>
-										</div>
+										<div class="fecha">23:32:12 54:54:23</div>
 									</div>
-									<span id="final"></span><!--Especificamos el final para presentar los mensajes mas ultimos-->
 								</div>
+							</div>
 						</div>
 					</section>
 				</div>

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 /**
  *
  * @author 
@@ -61,26 +62,60 @@ public class ArchivoRestController {
         return mensajes;
     }
     
-    //==========================SERVICIO DE PRUEBA 9092=========================
+  //==========================SERVICIO DE PRUEBA 9092=========================
     @RequestMapping(value = "/get_miembros", method = RequestMethod.GET)
     public List<Usuario> usuariosGrupo(@RequestParam Long id_grupo ) {
+    	System.out.println("id de grupo :"+id_grupo);
     	Usuario u = new Usuario();
     	Usuario u1 = new Usuario();
+    	Usuario u2 = new Usuario();
     	u.setIdUsuario(1);
-    	u.setAlias("Josue");
-    	u.setCorreo("josue@hotmail.com");
-    	u.setNombre("Josue Perez");
+    	u.setAlias("Gabriel");
+    	u.setCorreo("gabriel.loja@ucuenca.ec");
+    	u.setNombre("Gabriel Loja");
     	
     	u1.setIdUsuario(2);
-    	u1.setAlias("Pedro2");
-    	u1.setCorreo("josue2@hotmail.com");
-    	u1.setNombre("Pedro Paez ");
-    	
+    	u1.setAlias("Jose");
+    	u1.setCorreo("jose.moyano@ucuenca.ec");
+    	u1.setNombre("Jose Moyano");
+  
+      	u2.setIdUsuario(3);
+    	u2.setAlias("Paola");
+    	u2.setCorreo("paola.cardenas@ucuenca.ec");
+    	u2.setNombre("Paola Cardenas");
     	List<Usuario> usuarios = new ArrayList<>();
     	usuarios.add(u);
     	usuarios.add(u1);
+    	usuarios.add(u2);
     	
         return usuarios;
+    }
+    //===================================================================
+    
+  //==================SERVICIO DE PRUEBA 9092 SEARCH USERS===============
+    @RequestMapping(value = "/search_correo", method = RequestMethod.GET)
+    public Usuario buscarUsuario(@RequestParam String correo ) {
+    	 RestTemplate restTemplate = new RestTemplate();
+    	 String url = "http://172.16.147.43:9092/search_correo?correo=" + correo;
+    	 //Usuario usuario = restTemplate.getForObject(url, Usuario.class);
+    	 Usuario usuario=new Usuario() ;
+    	 usuario.setIdUsuario(1);
+    	 usuario.setAlias("asd");
+    	 usuario.setCorreo("asd@asd.com");
+    	 usuario.setNombre("asd asdasd ");
+    	 return usuario;
+    }
+  //===================================================================
+
+    
+  //==================SERVICIO DE PRUEBA 9092 ADD USERS===============
+    @RequestMapping(value = "/add_miembro", method = RequestMethod.GET)
+    public String agregarMiembro(@RequestParam Long id_usuario,@RequestParam Long id_grupo  ) {
+
+    	 RestTemplate restTemplate = new RestTemplate();
+    	 String url = "172.16.147.43:9092/add_miembro?id_usuario="+id_usuario+"&id_grupo="+id_grupo;
+    	// String estado = restTemplate.getForObject(url, String.class); //esta linea devuelve un string de ok,error o existe 
+    	 return "ok";
     }
     //===================================================================
     
