@@ -19,11 +19,29 @@ $(document).ready(function() {
         location.reload();
     });
 });
-window.onload = function() {
-	cargarMensajes();
-	cargarUsuarios();
-	posicionarScroll();
-	};
+var x = $(document);
+x.ready(inicializar);
+var idGroup=${id_grupo};
+var idUser=${id_usuario};
+
+
+
+function inicializar(){
+	<%String us=request.getParameter("id_usuario");
+	request.getSession().setAttribute("id_usuario",us);
+	request.getSession().setAttribute("nuevo","1");
+	%>
+            cargarMensajes();
+            cargarUsuarios();
+        	posicionarScroll();
+         
+        //    x = $("#enviarMSJ");
+          //  x.click(enviarMensaje);
+            //x = $("#txtMensaje");
+           // x.keypress(enviarMSJ);
+            
+}
+
 	
 	var datos=null;
 	function cargarMensajes(){
@@ -32,12 +50,20 @@ window.onload = function() {
 		function obtenerNombres(data){
 			datos=data;
 			$.get("/getMessages?",{id_grupo: idGroup},callback)
-		}	
+		}
+		var x = $("#ventanaConversacionInt");
+		//x.load("/ultimoMSJ?id=1", function(){irAlUltimo();
+		setTimeout("cargarMensajes()",1000);//  });
 	}
+	function irAlUltimo(){
+        var x = $("#ventanaConversacionInt");
+        
+       // x.scrollTo("#ultimo",0);
+    }
 	
-
-
+	
 	function callback(data){
+		
     	for ( var i = 0; i < data.length; i++) {
     		var date = new Date();
     		date.setTime(data[i].enviado);
@@ -45,11 +71,14 @@ window.onload = function() {
     	      ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
     	      ("0" + date.getDate()).slice(-2) + " " + date.getHours() + ":" + 
     	      date.getMinutes(); 
+    	      //Solo carga los mensajes que no estan aun;
+    	   if(!document.getElementById(data[i].idMensaje)){
+    		   var nuevoMsj = document.getElementById("myAudio");
 			var div=document.createElement('div');
 			div.id=data[i].idMensaje;
-            
           //OBTENER NOMBRES DE SERVICIO
             for ( var j = 0; j < datos.length; j++) {
+            	
             	if (datos[j].idUsuario==data[i].emisor){
 
             		if(${id_usuario}===data[i].emisor){
@@ -62,6 +91,7 @@ window.onload = function() {
         				"</div>"+
         				"<div class=\"fecha\">"+formatted+"</div>"+
         				"</div>";
+        				nuevoMsj.pause();
         			}else{
                 		data[i].emisor=datos[j].alias;
         				div.innerHTML="<div class=\"mensaje-amigo  text-left\">"+
@@ -70,20 +100,23 @@ window.onload = function() {
         				"<div class=\"flecha-izquierda\"></div>"+
         				"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
         				"</div>"+
-        				"<div class=\"fecha\">"+formatted+"</div>"+
-        				"</div>";
+        				"<div class=\"fecha\">"+formatted+"</div>"+"</div>"
+        				nuevoMsj.play();
         			}
 
                     document.getElementById("mensajes").appendChild(div);
                     document.getElementById(data[i].idMensaje).value="";
-            	}
+            	}}
+          
+            
             }
+    	   
+            }
+            
             //=======================================
-		}
     }
 
-       	var idGroup=${id_grupo};
-       	var idUser=${id_usuario};
+       	
        	function post(url,data){
        		return $.ajax({
        			type:'POST',
@@ -101,6 +134,8 @@ window.onload = function() {
        	    var message = {mensaje: $messageInput.val(), idGrupo: idGroup, emisor: idUser};
        	    $messageInput.val('');
        	    post('/addMessage',message);
+	       	
+            
        	}
         
        	function cargarEnIntegrantes(evt){
@@ -162,6 +197,9 @@ window.onload = function() {
 <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
+<audio id="myAudio">
+  <source src="audio/sonido.mp3" type="audio/mpeg">
+</audio>
 	<div class="container-fluid">
 		<div class="row">
 			<header>
@@ -203,7 +241,7 @@ window.onload = function() {
 			</div>
 			<!-- col-xs-12 col-sm-5 col-md-4 col-lg-3 -->
 			<div id="chat" class="col-xs-12 col-sm-7 col-md-8 col-lg-9">
-				<div class="row">
+				<div class="row" id="ventanaConversacionInt">
 					<section class="chat">
 						<div class="scroll scrollable scroll-bar vertical">
 							<div id="chat">
@@ -227,13 +265,14 @@ window.onload = function() {
 					<section class="actions">
 						<div class="col-xs-8 col-sm-10 col-md-10 col-lg-10">
 							<div class="actions-text">
-								<form>
+								<form onsubmit="enviarMensaje();">
 									<div
 										class="col-xs-9 col-sm-10 col-md-10 col-lg-10 actions-text-imput">
 										<input id="messageInput" type="text" name="" value="">
 									</div>
 									<div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-										<button id="miboton" onclick="enviarMensaje();" type="button"
+									
+										<button id="miboton" onclick="enviarMensaje();" type="button"	
 											class="btn btn-default bordered">
 											<img src="img/icono_enviar.png" alt="boton-enviar"
 												class="bordered-actions">
