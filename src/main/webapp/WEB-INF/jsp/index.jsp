@@ -11,185 +11,157 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Chat Legado</title>
 <script type="text/javascript" src="webjars/jquery/2.2.4/jquery.min.js"></script>
-
 <script type="text/javascript">
-$(document).ready(function() {
-    $('#miboton').click(function() {
-        // Recargo la página
-        location.reload();
-    });
-});
 var x = $(document);
 x.ready(inicializar);
 var idGroup=${id_grupo};
 var idUser=${id_usuario};
-
-
 
 function inicializar(){
 	<%String us=request.getParameter("id_usuario");
 	request.getSession().setAttribute("id_usuario",us);
 	request.getSession().setAttribute("nuevo","1");
 	%>
-            cargarMensajes();
-            cargarUsuarios();
-        	posicionarScroll();
-         
-        //    x = $("#enviarMSJ");
-          //  x.click(enviarMensaje);
-            //x = $("#txtMensaje");
-           // x.keypress(enviarMSJ);
-            
+    cargarMensajes();
+    cargarUsuarios();
+	posicionarScroll();           
 }
 
-	
-	var datos=null;
-	function cargarMensajes(){
-		//obtener de puerto 9092
-		$.get("/get_miembros?",{id_grupo: idGroup},obtenerNombres)
-		function obtenerNombres(data){
-			datos=data;
-			$.get("/getMessages?",{id_grupo: idGroup},callback)
-		}
-		var x = $("#ventanaConversacionInt");
-		//x.load("/ultimoMSJ?id=1", function(){irAlUltimo();
-		setTimeout("cargarMensajes()",1000);//  });
+var datos=null;
+function cargarMensajes(){
+	//obtener de puerto 9092
+	$.get("/get_miembros?",{id_grupo: idGroup},obtenerNombres)
+	function obtenerNombres(data){
+		datos=data;
+		$.get("/getMessages?",{id_grupo: idGroup},callback)
 	}
-	function irAlUltimo(){
-        var x = $("#ventanaConversacionInt");
-        
-       // x.scrollTo("#ultimo",0);
-    }
-	
-	
-	function callback(data){
-		
-    	for ( var i = 0; i < data.length; i++) {
-    		var date = new Date();
-    		date.setTime(data[i].enviado);
-    		var formatted = date.getFullYear() + "-" + 
-    	      ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
-    	      ("0" + date.getDate()).slice(-2) + " " + date.getHours() + ":" + 
-    	      date.getMinutes(); 
-    	      //Solo carga los mensajes que no estan aun;
-    	   if(!document.getElementById(data[i].idMensaje)){
-    		   var nuevoMsj = document.getElementById("myAudio");
+	var x = $("#ventanaConversacionInt");
+	//x.load("/ultimoMSJ?id=1", function(){irAlUltimo();
+	setTimeout("cargarMensajes()",1000);//  });
+}
+
+function irAlUltimo(){
+	var x = $("#ventanaConversacionInt");
+}
+   
+function callback(data){
+   	for ( var i = 0; i < data.length; i++) {
+   		var date = new Date();
+   		date.setTime(data[i].enviado);
+   		var formatted = date.getFullYear() + "-" + 
+   	      ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
+   	      ("0" + date.getDate()).slice(-2) + " " + date.getHours() + ":" + 
+   	      date.getMinutes(); 
+   	      //Solo carga los mensajes que no estan aun;
+   	   	if(!document.getElementById(data[i].idMensaje)){
+			var nuevoMsj = document.getElementById("myAudio");
 			var div=document.createElement('div');
 			div.id=data[i].idMensaje;
-          //OBTENER NOMBRES DE SERVICIO
-            for ( var j = 0; j < datos.length; j++) {
-            	
-            	if (datos[j].idUsuario==data[i].emisor){
-
-            		if(${id_usuario}===data[i].emisor){
-                		data[i].emisor=datos[j].alias;
-        				div.innerHTML="<div class=\"mensaje-autor  text-right\">"+
-        				"<div class=\"mensaje\">"+
-        				"<div class=\"nombre-autor\">"+data[i].emisor+"</div>"+
-        					"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
-        					"<div class=\"flecha-derecha\"></div>"+
-        				"</div>"+
-        				"<div class=\"fecha\">"+formatted+"</div>"+
-        				"</div>";
-        				nuevoMsj.pause();
-        			}else{
-                		data[i].emisor=datos[j].alias;
-        				div.innerHTML="<div class=\"mensaje-amigo  text-left\">"+
-        				"<div class=\"mensaje\">"+
-        				"<div class=\"nombre-amigo\">"+data[i].emisor+"</div>"+
-        				"<div class=\"flecha-izquierda\"></div>"+
-        				"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
-        				"</div>"+
-        				"<div class=\"fecha\">"+formatted+"</div>"+"</div>"
-        				nuevoMsj.play();
-        			}
-
-                    document.getElementById("mensajes").appendChild(div);
-                    document.getElementById(data[i].idMensaje).value="";
-            	}}
-          
-            
-            }
-    	   
-            }
-            
-            //=======================================
-    }
-
-       	
-       	function post(url,data){
-       		return $.ajax({
-       			type:'POST',
-       			url:url,
-       			headers:{
-       				'Accept': 'application/json',
-       				'Content-Type': 'application/json'
-       			},
-       			data:JSON.stringify(data)
-       		});
-       	}
-       	
-       	function enviarMensaje() {
-       	    var $messageInput = $('#messageInput');
-       	    var message = {mensaje: $messageInput.val(), idGrupo: idGroup, emisor: idUser};
-       	    $messageInput.val('');
-       	    post('/addMessage',message);
-	       	
-            
-       	}
-        
-       	function cargarEnIntegrantes(evt){
-   	     var email=document.getElementById("email").value;
-   		$.get("/search_correo?",{correo: email}, correo );
-   	} 
-   	
-   	var usuario;
-   	var alias;
-   	function correo(data){
-   		if(data)
-   	    {
-   			usuario=data.nombre;
-   	    	alias=data.alias;
-   			$.get("/add_miembro?",{id_usuario: data.idUsuario,id_grupo:idGroup}, agregarMiembro );
-   	    }else{
-   	    	alert("No existe el usuario");
-   	    }
-	//	cargarUsuarios(); //activar cuando los micro servicios esten listos   	
-   	   	function agregarMiembro(estado){
-			if(estado==="ok"){
-				var li=document.createElement('li'); //quitar cuando ya esten los servicios
-   	            li.id=alias; //quitar cuando ya esten los servicios
-   	            li.innerHTML="<li> <h4> "+usuario+"</h4> </li>"; //quitar cuando ya esten los servicios
-   	            document.getElementById("listaIntegrantes").appendChild(li); //quitar cuando ya esten los servicios
-   	            document.getElementById("email").value=""; //quitar cuando ya esten los servicios
-				alert("Usuario ingresado");
-			}else if(estado==="existe"){
-				alert("El usuario ya existe en el grupo");
-			}else{
-				alert("Error al realizar la acción revice los servicios");
-			}
+         	//OBTENER NOMBRES DE SERVICIO
+           	for ( var j = 0; j < datos.length; j++) {
+           		if (datos[j].idUsuario==data[i].emisor){
+	           		if(${id_usuario}===data[i].emisor){
+	               		data[i].emisor=datos[j].alias;
+	       				div.innerHTML="<div class=\"mensaje-autor  text-right\">"+
+	       				"<div class=\"mensaje\">"+
+	       				"<div class=\"nombre-autor\">"+data[i].emisor+"</div>"+
+	       					"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
+	       					"<div class=\"flecha-derecha\"></div>"+
+	       				"</div>"+
+	       				"<div class=\"fecha\">"+formatted+"</div>"+
+	       				"</div>";
+	       				nuevoMsj.pause();
+	       			}else{
+	               		data[i].emisor=datos[j].alias;
+	       				div.innerHTML="<div class=\"mensaje-amigo  text-left\">"+
+	       				"<div class=\"mensaje\">"+
+	       				"<div class=\"nombre-amigo\">"+data[i].emisor+"</div>"+
+	       				"<div class=\"flecha-izquierda\"></div>"+
+	       				"<div class=\"contenido\">"+data[i].mensaje+"</div>"+
+	       				"</div>"+
+	       				"<div class=\"fecha\">"+formatted+"</div>"+"</div>"
+	       				nuevoMsj.play();
+       				}
+					document.getElementById("mensajes").appendChild(div);
+					document.getElementById(data[i].idMensaje).value="";
+           		}
+       		}
 		}
-   	}
-   	
-   	function cargarUsuarios(){
-   		$.get("/get_miembros?",{id_grupo: idGroup},cargarIntegrantes);
-       	function cargarIntegrantes(data){
-	            document.getElementById("listaIntegrantes").innerHTML="";
-           	for ( var i = 0; i < data.length; i++) {
-   				var li=document.createElement('li');
-   	            li.id=data[i].alias;
-   	            li.innerHTML="<li> <h4> "+data[i].nombre+"</h4> </li>";
-   	            document.getElementById("listaIntegrantes").appendChild(li);
-   	            document.getElementById("email").value="";
-           	}
-       	}	
-   	}
-   	function posicionarScroll(){
-   		var objDiv = document.getElementById("chat");
-   		objDiv.scrollTop = objDiv.scrollHeight;
+	}           
+}
+      	
+function post(url,data){
+	return $.ajax({
+		type:'POST',
+		url:url,
+		headers:{
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		data:JSON.stringify(data)
+	});
+}
+function enviarMensaje() {
+    var $messageInput = $('#messageInput');
+    if ($messageInput.val()!=""){
+    	var message = {mensaje: $messageInput.val(), idGrupo: idGroup, emisor: idUser};
+    	$messageInput.val('');
+    	post('/addMessage',message);
     }
-       	
-        </script>
+}
+
+function cargarEnIntegrantes(evt){
+	var email=document.getElementById("email").value;
+	$.get("/search_correo?",{correo: email}, correo );
+} 
+  	
+var usuario;
+var alias;
+function correo(data){
+	if(data)
+    {
+		usuario=data.nombre;
+    	alias=data.alias;
+		$.get("/add_miembro?",{id_usuario: data.idUsuario,id_grupo:idGroup}, agregarMiembro );
+    }else{
+    	alert("No existe el usuario");
+    }
+}
+
+function agregarMiembro(estado){
+	if(estado==="ok"){
+		var li=document.createElement('li'); //quitar cuando ya esten los servicios
+		li.id=alias; //quitar cuando ya esten los servicios
+		li.innerHTML="<li> <h4> "+usuario+"</h4> </li>"; //quitar cuando ya esten los servicios
+		document.getElementById("listaIntegrantes").appendChild(li); //quitar cuando ya esten los servicios
+		document.getElementById("email").value=""; //quitar cuando ya esten los servicios
+		alert("Usuario ingresado");
+	}else if(estado==="existe"){
+		alert("El usuario ya existe en el grupo");
+	}else{
+		alert("Error al realizar la acción revice los servicios");
+	}
+}
+  	
+function cargarUsuarios(){
+	$.get("/get_miembros?",{id_grupo: idGroup},cargarIntegrantes);
+   	function cargarIntegrantes(data){
+         document.getElementById("listaIntegrantes").innerHTML="";
+       	for ( var i = 0; i < data.length; i++) {
+			var li=document.createElement('li');
+            li.id=data[i].alias;
+            li.innerHTML="<li> <h4> "+data[i].nombre+"</h4> </li>";
+            document.getElementById("listaIntegrantes").appendChild(li);
+            document.getElementById("email").value="";
+       	}
+   	}	
+}
+
+function posicionarScroll(){
+	var objDiv = document.getElementById("chat");
+	objDiv.scrollTop = objDiv.scrollHeight;
+}
+</script>
 <meta name="viewport"
 	content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 <link rel="stylesheet" href="css/bootstrap.css">
@@ -265,20 +237,17 @@ function inicializar(){
 					<section class="actions">
 						<div class="col-xs-8 col-sm-10 col-md-10 col-lg-10">
 							<div class="actions-text">
-								<form onsubmit="enviarMensaje();">
-									<div
-										class="col-xs-9 col-sm-10 col-md-10 col-lg-10 actions-text-imput">
-										<input id="messageInput" type="text" name="" value="">
-									</div>
-									<div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
-									
-										<button id="miboton" onclick="enviarMensaje();" type="button"	
-											class="btn btn-default bordered">
-											<img src="img/icono_enviar.png" alt="boton-enviar"
-												class="bordered-actions">
-										</button>
-									</div>
-								</form>
+								<div
+									class="col-xs-9 col-sm-10 col-md-10 col-lg-10 actions-text-imput">
+									<input id="messageInput" type="text">
+								</div>
+								<div class="col-xs-3 col-sm-2 col-md-2 col-lg-2">
+									<button id="miboton"  onclick="enviarMensaje();" type="button"	
+										class="btn btn-default bordered">
+										<img src="img/icono_enviar.png" alt="boton-enviar"
+											class="bordered-actions">
+									</button>
+								</div>
 							</div>
 						</div>
 						<div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 actions-archivo">
@@ -295,7 +264,6 @@ function inicializar(){
 						</div>
 					</section>
 				</div>
-
 			</div>
 		</div>
 		<script src="js/script.js"></script>
@@ -303,8 +271,6 @@ function inicializar(){
 		<script src="js/npm.js"></script>
 		<script src="js/angular.min.js"></script>
 	</div>
-
-
 	<!-- <h1>Hello World!</h1>
         <a href="archivos?id_grupo=1&id_usuario=1">Archivos</a> -->
 </body>

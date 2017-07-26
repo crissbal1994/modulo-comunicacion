@@ -34,11 +34,10 @@ public class ArchivoRestController {
 	@Autowired
 	private MensajeRep msgRep;
 	private Date date;
-    private static final Logger logger = Logger.getLogger(RestController.class.getName());
     //Solicitud del usuario y método
     @RequestMapping(value = "/addMessage", method = RequestMethod.POST)
     public Mensaje agregar(@RequestBody Mensaje m) {
-    	System.out.println(m.getMensaje());
+    	System.out.println("Nuevo msg"+m.getMensaje());
     	date = new Date();
     	try {
     		m.setEnviado(date);		   		
@@ -65,7 +64,6 @@ public class ArchivoRestController {
   //==========================SERVICIO DE PRUEBA 9092=========================
     @RequestMapping(value = "/get_miembros", method = RequestMethod.GET)
     public List<Usuario> usuariosGrupo(@RequestParam Long id_grupo ) {
-    	System.out.println("id de grupo :"+id_grupo);
     	Usuario u = new Usuario();
     	Usuario u1 = new Usuario();
     	Usuario u2 = new Usuario();
@@ -139,7 +137,4 @@ public class ArchivoRestController {
     public String error() {
         return "Problemas en la página";
     }
-    
-    
-    
 }
