@@ -5,10 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
+
 public class Grupo {
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	
 	private int idGrupo;
 	private String nombre;
 	private int idPeriodoAcademico;

@@ -14,6 +14,7 @@
 <script type="text/javascript">
 var x = $(document);
 x.ready(inicializar);
+var n_grupo=${nombre_grupo};
 var idGroup=${id_grupo};
 var idUser=${id_usuario};
 
@@ -22,6 +23,9 @@ function inicializar(){
 	request.getSession().setAttribute("id_usuario",us);
 	request.getSession().setAttribute("nuevo","1");
 	%>
+	 var t = document.getElementById('titulo');
+	 t.innerHTML = n_grupo;
+	
     cargarMensajes();
     cargarUsuarios();
 	posicionarScroll();           
@@ -30,14 +34,14 @@ function inicializar(){
 var datos=null;
 function cargarMensajes(){
 	//obtener de puerto 9092
-	$.get("/get_miembros?",{id_grupo: idGroup},obtenerNombres)
-	function obtenerNombres(data){
-		datos=data;
+	//$.get("/get_miembros?",{id_grupo: idGroup},obtenerNombres)
+	//function obtenerNombres(data){
+	//	datos=data;
 		$.get("/getMessages?",{id_grupo: idGroup},callback)
-	}
+	//}
 	var x = $("#ventanaConversacionInt");
 	//x.load("/ultimoMSJ?id=1", function(){irAlUltimo();
-	setTimeout("cargarMensajes()",1000);//  });
+	setTimeout("cargarMensajes()",5000);//  });
 }
 
 function irAlUltimo(){
@@ -52,16 +56,21 @@ function callback(data){
    	      ("0" + (date.getMonth() + 1)).slice(-2) + "-" + 
    	      ("0" + date.getDate()).slice(-2) + " " + date.getHours() + ":" + 
    	      date.getMinutes(); 
+   	      
    	      //Solo carga los mensajes que no estan aun;
    	   	if(!document.getElementById(data[i].idMensaje)){
 			var nuevoMsj = document.getElementById("myAudio");
 			var div=document.createElement('div');
 			div.id=data[i].idMensaje;
          	//OBTENER NOMBRES DE SERVICIO
-           	for ( var j = 0; j < datos.length; j++) {
-           		if (datos[j].idUsuario==data[i].emisor){
+           	//for ( var j = 0; j < datos.length; j++) {
+           		//if (datos[j].idUsuario==data[i].emisor){
+           			var temp = data[i].mensaje.split(",");
+	           			data[i].mensaje=temp[0];
+	           			
 	           		if(${id_usuario}===data[i].emisor){
-	               		data[i].emisor=datos[j].alias;
+	           			data[i].emisor=temp[1];
+	               		
 	       				div.innerHTML="<div class=\"mensaje-autor  text-right\">"+
 	       				"<div class=\"mensaje\">"+
 	       				"<div class=\"nombre-autor\">"+data[i].emisor+"</div>"+
@@ -72,7 +81,7 @@ function callback(data){
 	       				"</div>";
 	       				nuevoMsj.pause();
 	       			}else{
-	               		data[i].emisor=datos[j].alias;
+	       				data[i].emisor=temp[1];
 	       				div.innerHTML="<div class=\"mensaje-amigo  text-left\">"+
 	       				"<div class=\"mensaje\">"+
 	       				"<div class=\"nombre-amigo\">"+data[i].emisor+"</div>"+
@@ -84,8 +93,8 @@ function callback(data){
        				}
 					document.getElementById("mensajes").appendChild(div);
 					document.getElementById(data[i].idMensaje).value="";
-           		}
-       		}
+           		//}
+       		//}
 		}
 	}           
 }
@@ -192,7 +201,7 @@ function posicionarScroll(){
 			<div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
 				<aside>
 					<!--Aqui se ingresara el nombre del proyecto-->
-					<h1>Proyecto XYZ</h1>
+					<h1 id="titulo">Proyecto XYZ</h1>
 					<hr>
 					<h4 class="bold">Agregar Integrante</h4>
 					<form class = "navbar-form" role = "search">

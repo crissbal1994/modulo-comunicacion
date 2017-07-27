@@ -5,15 +5,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
+
 public class Usuario {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	
 	private int idUsuario;
 	private String alias;
 	private String correo;
 	private String nombre;
+	private int id_usuario;
+	
+	
+	public int getId_usuario() {
+		return id_usuario;
+	}
+	public void setId_usuario(int id_usuario) {
+		this.id_usuario = id_usuario;
+	}
 	public int getIdUsuario() {
 		return idUsuario;
 	}

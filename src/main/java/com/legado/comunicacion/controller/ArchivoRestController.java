@@ -7,6 +7,8 @@ package com.legado.comunicacion.controller;
 
 import com.legado.comunicacion.Rep.MensajeRep;
 import java.util.List;
+
+import com.legado.comunicacion.dom.Grupo;
 import com.legado.comunicacion.dom.Mensaje;
 import com.legado.comunicacion.dom.Resultado;
 import com.legado.comunicacion.dom.Usuario;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,6 +57,25 @@ public class ArchivoRestController {
     	List<Mensaje> mensajes = null;
     	try {
     			mensajes = msgRep.encontrarMensajesPorGrupo(id_grupo);	
+    			
+    			//Conversion de id a nombres
+    			RestTemplate restTemplate = new RestTemplate();
+    	        String url = "http://localhost:9093/get_miembros?id_grupo=" + id_grupo;
+    	        ResponseEntity<Usuario[]> rp = restTemplate.getForEntity(url, Usuario[].class);
+    			Usuario[] usuarios = rp.getBody();
+    			
+    			
+    			
+    			for (int j = 0; j < mensajes.size(); j++) {
+    				for (int i = 0; i < usuarios.length; i++) {
+    					
+    					if (usuarios[i].getId_usuario()==mensajes.get(j).getEmisor()){
+    						
+    						mensajes.get(j).setMensaje(mensajes.get(j).getMensaje()+","+usuarios[i].getAlias());
+    					}
+    				}
+				}
+    			
     		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,22 +84,32 @@ public class ArchivoRestController {
     }
     
   //==========================SERVICIO DE PRUEBA 9092=========================
+    @RequestMapping(value = "/get_grupo", method = RequestMethod.GET)
+    	public Grupo grupo(@RequestParam Long id_grupo){
+    		Grupo g = new Grupo();
+    		g.setNombre("Deber WEB");
+    		return g;
+    	}
+    
     @RequestMapping(value = "/get_miembros", method = RequestMethod.GET)
     public List<Usuario> usuariosGrupo(@RequestParam Long id_grupo ) {
     	Usuario u = new Usuario();
     	Usuario u1 = new Usuario();
     	Usuario u2 = new Usuario();
     	u.setIdUsuario(1);
+    	u.setId_usuario(1);
     	u.setAlias("Gabriel");
     	u.setCorreo("gabriel.loja@ucuenca.ec");
     	u.setNombre("Gabriel Loja");
     	
     	u1.setIdUsuario(2);
+    	u1.setId_usuario(2);
     	u1.setAlias("Jose");
     	u1.setCorreo("jose.moyano@ucuenca.ec");
     	u1.setNombre("Jose Moyano");
   
       	u2.setIdUsuario(3);
+      	u2.setId_usuario(3);
     	u2.setAlias("Paola");
     	u2.setCorreo("paola.cardenas@ucuenca.ec");
     	u2.setNombre("Paola Cardenas");
