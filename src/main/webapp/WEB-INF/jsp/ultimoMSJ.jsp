@@ -4,10 +4,40 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Nuevo Archivo subido</title>
+<script type="text/javascript" src="webjars/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript">
+var idGroup=${id_grupo};
+var idUser=${id_usuario};
+var mensaje=${mensaje};
+
+var x = $(document);
+x.ready(notificar);
+
+function post(url,data){
+	return $.ajax({
+		type:'POST',
+		url:url,
+		headers:{
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		data:JSON.stringify(data)
+	});
+}
+function notificar(){
+	
+	var message = {mensaje: mensaje, idGrupo: idGroup, emisor: idUser};
+	post('/addMessage',message);
+	}
+
+
+</script>
 </head>
 <body>
 <br><br>
-<div id="ultimo"></div>
+<div id="ultimo">
+
+</div>
 </body>
 </html>
