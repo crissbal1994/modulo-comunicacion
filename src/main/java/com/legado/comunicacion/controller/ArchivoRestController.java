@@ -60,7 +60,7 @@ public class ArchivoRestController {
     			
     			//Conversion de id a nombres
     			RestTemplate restTemplate = new RestTemplate();
-    	        String url = "http://localhost:9093/get_miembros?id_grupo=" + id_grupo;
+    	        String url = "http://172.16.147.151:9092/get_miembros?id_grupo=" + id_grupo;
     	        ResponseEntity<Usuario[]> rp = restTemplate.getForEntity(url, Usuario[].class);
     			Usuario[] usuarios = rp.getBody();
     			
@@ -92,31 +92,11 @@ public class ArchivoRestController {
     	}
     
     @RequestMapping(value = "/get_miembros", method = RequestMethod.GET)
-    public List<Usuario> usuariosGrupo(@RequestParam Long id_grupo ) {
-    	Usuario u = new Usuario();
-    	Usuario u1 = new Usuario();
-    	Usuario u2 = new Usuario();
-    	u.setIdUsuario(1);
-    	u.setId_usuario(1);
-    	u.setAlias("Gabriel");
-    	u.setCorreo("gabriel.loja@ucuenca.ec");
-    	u.setNombre("Gabriel Loja");
-    	
-    	u1.setIdUsuario(2);
-    	u1.setId_usuario(2);
-    	u1.setAlias("Jose");
-    	u1.setCorreo("jose.moyano@ucuenca.ec");
-    	u1.setNombre("Jose Moyano");
-  
-      	u2.setIdUsuario(3);
-      	u2.setId_usuario(3);
-    	u2.setAlias("Paola");
-    	u2.setCorreo("paola.cardenas@ucuenca.ec");
-    	u2.setNombre("Paola Cardenas");
-    	List<Usuario> usuarios = new ArrayList<>();
-    	usuarios.add(u);
-    	usuarios.add(u1);
-    	usuarios.add(u2);
+    public Usuario[] usuariosGrupo(@RequestParam Long id_grupo ) {
+    	RestTemplate restTemplate = new RestTemplate();
+        String url = "http://172.16.147.151:9092/get_miembros?id_grupo=" + id_grupo;
+        ResponseEntity<Usuario[]> rp = restTemplate.getForEntity(url, Usuario[].class);
+		Usuario[] usuarios = rp.getBody();
     	
         return usuarios;
     }
@@ -126,13 +106,9 @@ public class ArchivoRestController {
     @RequestMapping(value = "/search_correo", method = RequestMethod.GET)
     public Usuario buscarUsuario(@RequestParam String correo ) {
     	 RestTemplate restTemplate = new RestTemplate();
-    	 String url = "http://172.16.147.43:9092/search_correo?correo=" + correo;
-    	 //Usuario usuario = restTemplate.getForObject(url, Usuario.class);
-    	 Usuario usuario=new Usuario() ;
-    	 usuario.setIdUsuario(1);
-    	 usuario.setAlias("asd");
-    	 usuario.setCorreo("asd@asd.com");
-    	 usuario.setNombre("asd asdasd ");
+    	 String url = "http://172.16.147.108:9091/search_correo?correo=" + correo;
+    	 Usuario usuario = restTemplate.getForObject(url, Usuario.class);
+    	 
     	 return usuario;
     }
   //===================================================================
@@ -143,9 +119,9 @@ public class ArchivoRestController {
     public String agregarMiembro(@RequestParam Long id_usuario,@RequestParam Long id_grupo  ) {
 
     	 RestTemplate restTemplate = new RestTemplate();
-    	 String url = "172.16.147.43:9092/add_miembro?id_usuario="+id_usuario+"&id_grupo="+id_grupo;
-    	// String estado = restTemplate.getForObject(url, String.class); //esta linea devuelve un string de ok,error o existe 
-    	 return "ok";
+    	 String url = "172.16.147.151:9092/add_miembro?id_usuario="+id_usuario+"&id_grupo="+id_grupo;
+    	 String estado = restTemplate.getForObject(url, String.class); //esta linea devuelve un string de ok,error o existe 
+    	 return estado;
     }
     //===================================================================
     

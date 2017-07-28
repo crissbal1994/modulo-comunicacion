@@ -260,16 +260,21 @@ function posicionarScroll(){
 							</div>
 						</div>
 						<div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 actions-archivo">
+							<a href="http://172.16.147.241:9094/dir?id_grupo=${id_grupo}&id_usuario=${id_usuario}">
 							<button type="submit" class="btn bordered">
+							
 								<img src="img/icono_archivo.png" alt="boton-archivo"
 									class="bordered-actions" />
 							</button>
+							</a>
 						</div>
 						<div class="col-xs-2 col-sm-1 col-md-1 col-lg-1 actions-calendar">
+						<a href="http://172.16.147.241:9095/?id_grupo=${id_grupo}&id_usuario=${id_usuario}">
 							<button type="submit" class="btn bordered">
 								<img src="img/icono_calendario.png" alt="boton-calentario"
 									class="bordered-actions" />
 							</button>
+							</a>
 						</div>
 					</section>
 				</div>
