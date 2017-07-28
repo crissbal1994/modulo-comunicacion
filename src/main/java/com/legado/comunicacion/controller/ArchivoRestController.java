@@ -125,7 +125,7 @@ public class ArchivoRestController {
     }
     //===================================================================
     
-    @RequestMapping(value = "/crear_alerta", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/crear_alerta", method = RequestMethod.POST)
     public Resultado alerta(@RequestBody Mensaje m   ) {
     	date = new Date();
     	Resultado r = new Resultado();
@@ -139,7 +139,7 @@ public class ArchivoRestController {
 			e.printStackTrace();
 		}
         return r;
-    }
+    }*/
     
     @RequestMapping(value = "/error", method = RequestMethod.POST)
     public String error() {
